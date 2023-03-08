@@ -222,10 +222,11 @@ class _AddTransactionState extends State<AddTransaction> {
           SizedBox(
             height: 50.0,
             child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (amount != null && note.isNotEmpty) {
                     DbHelper dbHelper = DbHelper();
-                    dbHelper.addData(amount!, selectedDate, note, type);
+                    await dbHelper.addData(amount!, selectedDate, note, type);
+                    Navigator.of(context).pop();
                   } else {}
                 },
                 child: Text(

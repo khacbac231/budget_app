@@ -18,32 +18,19 @@ class _HomePageState extends State<HomePage> {
   int totalBalance = 0;
   int totalIncome = 0;
   int totalExpense = 0;
-  int maxLength = 0;
-  int maxLength_tmp = 0;
-  int count = 0;
   getTotalBalance(Map entireData) async {
-    maxLength = entireData.length;
-    print(count);
-    if (count == 0) {
-      entireData.forEach((key, value) {
-        if (value['type'] == "Income") {
-          totalBalance += value['amount'] as int;
-          totalIncome += value['amount'] as int;
-        } else {
-          totalBalance -= value['amount'] as int;
-          totalExpense += value['amount'] as int;
-        }
-      });
-      count++;
-    } else {
-      if (entireData[entireData.length]['type'] == "Income") {
-        totalBalance += entireData[entireData.length]['amount'] as int;
-        totalIncome += entireData[entireData.length]['amount'] as int;
+    totalBalance = 0;
+    totalIncome = 0;
+    totalExpense = 0;
+    entireData.forEach((key, value) {
+      if (value['type'] == "Income") {
+        totalBalance += value['amount'] as int;
+        totalIncome += value['amount'] as int;
       } else {
-        totalBalance -= entireData[entireData.length]['amount'] as int;
-        totalExpense += entireData[entireData.length]['amount'] as int;
+        totalBalance -= value['amount'] as int;
+        totalExpense += value['amount'] as int;
       }
-    }
+    });
   }
 
   @override
@@ -56,9 +43,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context)
+              .push(MaterialPageRoute(
             builder: (context) => AddTransaction(),
-          ));
+          ))
+              .whenComplete(() {
+            setState(() {});
+          });
         },
         backgroundColor: Static.PrimaryColor,
         shape:
