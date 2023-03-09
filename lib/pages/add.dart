@@ -227,7 +227,9 @@ class _AddTransactionState extends State<AddTransaction> {
                     DbHelper dbHelper = DbHelper();
                     await dbHelper.addData(amount!, selectedDate, note, type);
                     Navigator.of(context).pop();
-                  } else {}
+                  } else {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text(
                   "Add",

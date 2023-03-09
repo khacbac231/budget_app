@@ -87,3 +87,10 @@ String formatMoney(String value) {
   }
   return String.fromCharCodes(output.runes.toList().reversed);
 }
+
+String formatTime(String value) {
+  List<String> listStr = value.split(' ');
+  List<String> subListStr = listStr[0].split('-');
+  String output = "${subListStr[2]}/${subListStr[1]}/${subListStr[0]}";
+  return output;
+}

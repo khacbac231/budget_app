@@ -69,89 +69,223 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.data!.isEmpty) {
                 return Center(child: Text("No data!"));
               }
+
               getTotalBalance(snapshot.data!);
-              return ListView(
+              return Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CircleAvatar(
-                              maxRadius: 32.0,
-                              child: Image.asset(
-                                "assets/face.png",
-                                width: 64.0,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12.0,
-                            ),
-                            Text(
-                              "Welcome NKB",
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          ],
-                        ),
-                        Icon(
-                          Icons.settings,
-                          size: 32.0,
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: cardWidth,
-                    margin: EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          gradient: LinearGradient(colors: const [
-                            Static.PrimaryColor,
-                            Colors.blueAccent
-                          ])),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Total Balance',
-                            style:
-                                TextStyle(fontSize: 22.0, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 12.0,
-                          ),
-                          Text(
-                            "${formatMoney(totalBalance.toString())}đ",
-                            style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Row(
                               children: [
-                                Container(
-                                  child: cardIncome(totalIncome.toString()),
+                                CircleAvatar(
+                                  maxRadius: 32.0,
+                                  child: Image.asset(
+                                    "assets/face.png",
+                                    width: 64.0,
+                                  ),
                                 ),
-                                Container(
-                                  child: cardExpense(totalExpense.toString()),
+                                SizedBox(
+                                  width: 12.0,
+                                ),
+                                Text(
+                                  "Welcome NKB",
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 )
                               ],
                             ),
-                          )
-                        ],
+                            Icon(
+                              Icons.settings,
+                              size: 32.0,
+                            )
+                          ],
+                        ),
                       ),
+                      Container(
+                        width: cardWidth,
+                        margin: EdgeInsets.all(12.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              gradient: LinearGradient(colors: const [
+                                Static.PrimaryColor,
+                                Colors.blueAccent
+                              ])),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Total Balance',
+                                style: TextStyle(
+                                    fontSize: 22.0, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              Text(
+                                "${formatMoney(totalBalance.toString())}đ",
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: cardIncome(totalIncome.toString()),
+                                    ),
+                                    Container(
+                                      child:
+                                          cardExpense(totalExpense.toString()),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    padding: EdgeInsets.all(6.0),
+                    margin: EdgeInsets.symmetric(horizontal: 6.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white70,
+                        border: Border.all(color: Static.PrimaryColor),
+                        borderRadius: BorderRadius.circular(12.0)),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        Map sortedByValueMap = Map.fromEntries(snapshot
+                            .data!.entries
+                            .toList()
+                          ..sort((e1, e2) =>
+                              e1.value['date'].compareTo(e2.value['date'])));
+                        Map compeleSortedData = {};
+                        int keyTmp = 0;
+                        for (var k in sortedByValueMap.keys) {
+                          compeleSortedData[keyTmp] = sortedByValueMap[k];
+                          keyTmp++;
+                        }
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  formatTime(compeleSortedData[index]['date']
+                                      .toString()),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15.0),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                SizedBox(
+                                  width: 85.0,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        compeleSortedData[index]['type'] ==
+                                                "Income"
+                                            ? Icons.arrow_upward_outlined
+                                            : Icons.arrow_downward_outlined,
+                                        size: 15.0,
+                                        color: compeleSortedData[index]
+                                                    ['type'] ==
+                                                "Income"
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                      Text(
+                                        compeleSortedData[index]['type'],
+                                        style: TextStyle(
+                                            fontSize: 15.0,
+                                            color: compeleSortedData[index]
+                                                        ['type'] ==
+                                                    "Income"
+                                                ? Colors.green
+                                                : Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 90.0,
+                                  child: Text(
+                                    "${formatMoney(compeleSortedData[index]['amount'].toString())}đ",
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: compeleSortedData[index]
+                                                    ['type'] ==
+                                                "Income"
+                                            ? Colors.green
+                                            : Colors.red),
+                                  ),
+                                ),
+                                Text(
+                                  compeleSortedData[index]['note'],
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Delete"),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.delete_forever,
+                                        size: 30.0,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Update"),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 20.0,
+                                          color: Colors.black,
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider(
+                          color: Theme.of(context).primaryColor,
+                        );
+                      },
                     ),
                   )
                 ],
