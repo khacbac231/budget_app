@@ -75,7 +75,8 @@ String formatMoney(String value) {
   int length = value.length;
   int index = 0;
   while (length > 0) {
-    if (index == 3) {
+    if (index == 3 && value[length - 1] != "-") {
+      if (value[0] != "-" && length == 1) {}
       output += ".";
       output += value[length - 1];
       index = 0;

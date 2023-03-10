@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:untitled/controllers/db_helper.dart';
 import 'package:untitled/static.dart' as Static;
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AddTransaction extends StatefulWidget {
   const AddTransaction({Key? key}) : super(key: key);
@@ -32,6 +33,10 @@ class _AddTransactionState extends State<AddTransaction> {
     }
   }
 
+  dynamic maskFormatter = MaskTextInputFormatter(
+      mask: '###.###.###',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,16 +78,16 @@ class _AddTransactionState extends State<AddTransaction> {
               ),
               Expanded(
                 child: TextField(
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  inputFormatters: [maskFormatter],
                   keyboardType: TextInputType.number,
                   decoration:
                       InputDecoration(hintText: "0", border: InputBorder.none),
                   style: TextStyle(fontSize: 24.0),
                   onChanged: (val) {
-                    try {
-                      amount = int.parse(val);
-                    } catch (err) {}
+                    print(maskFormatter.getUnmaskedText());
+                    amount = int.tryParse(maskFormatter.getUnmaskedText());
                   },
+                  onSubmitted: (val) {},
                 ),
               ),
             ],
@@ -223,8 +228,8 @@ class _AddTransactionState extends State<AddTransaction> {
             height: 50.0,
             child: ElevatedButton(
                 onPressed: () async {
+                  DbHelper dbHelper = DbHelper();
                   if (amount != null && note.isNotEmpty) {
-                    DbHelper dbHelper = DbHelper();
                     await dbHelper.addData(amount!, selectedDate, note, type);
                     Navigator.of(context).pop();
                   } else {

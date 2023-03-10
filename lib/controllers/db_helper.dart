@@ -14,10 +14,17 @@ class DbHelper {
     box.add(value);
   }
 
+  Future deleteData(int key) async {
+    box.delete(key);
+    print("19:----------${box.keys}");
+    return fetch();
+  }
+
   Future<Map> fetch() {
     if (box.values.isEmpty) {
       return Future.value({});
     } else {
+      print(box.toMap().toString());
       return Future.value(box.toMap());
     }
   }
