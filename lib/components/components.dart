@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:untitled/static.dart' as Static;
 
 Widget cardIncome(String value) {
   return Row(
@@ -94,4 +98,19 @@ String formatTime(String value) {
   List<String> subListStr = listStr[0].split('-');
   String output = "${subListStr[2]}/${subListStr[1]}/${subListStr[0]}";
   return output;
+}
+
+class showUpdateFormStream {
+  bool isShown = false;
+  StreamController showController = StreamController<bool>();
+  Stream get showStream => showController.stream;
+
+  void update() {
+    isShown = !isShown;
+    showController.sink.add(isShown);
+  }
+
+  void dispose() {
+    showController.close();
+  }
 }

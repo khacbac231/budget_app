@@ -16,15 +16,16 @@ class DbHelper {
 
   Future deleteData(int key) async {
     box.delete(key);
-    print("19:----------${box.keys}");
-    return fetch();
+  }
+
+  Future updateOneItem(int key, Map obj) async {
+    box.put(key, obj);
   }
 
   Future<Map> fetch() {
     if (box.values.isEmpty) {
       return Future.value({});
     } else {
-      print(box.toMap().toString());
       return Future.value(box.toMap());
     }
   }
